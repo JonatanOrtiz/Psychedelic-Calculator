@@ -1,1 +1,1 @@
-Uma calculadora simples feita em JavaScript
+A Psychedelic Calculator in JavaScript

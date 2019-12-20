@@ -96,12 +96,7 @@ for (var i = 0; i < number.length; i++) {
 }
 
 document.getElementById(".").addEventListener('click', function(){
-	if (getOutput(".")){
-		printOutput("0.")
-	}
-	else{
 		var output = getOutput();
 		output = output + this.id;
 		printOutput(output);
-	}
 });
