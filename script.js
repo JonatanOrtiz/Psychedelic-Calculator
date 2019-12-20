@@ -3,33 +3,37 @@ function getHistory() {
 }
 
 function printHistory(num) {
-	document.getElementById("history-value").innerText = num;
+	if (num.length<=30){
+		document.getElementById("history-value").innerText = num;
+	}
 }
 
 function getOutput() {
 	n = document.getElementById("hidden-output-value").innerText;
 	if (Number(n)>=1 && n.substr(0,1)=="0"){
 		return n.substr(1,14);
-	 }
-	 else {
-	return n;
+	}
+	else {
+		return n;
 	}
 }
 
 function printOutput(num) {
-	if (num == "") {
-		document.getElementById("output-value").innerText = "";
+	if (num.length<=14){
+		if (num == "") {
+			document.getElementById("output-value").innerText = "";
+		}
+		else if (num=="."){
+			document.getElementById("output-value").innerText = ".";
+		}
+		else if (num.endsWith(".")){
+			document.getElementById("output-value").innerText = getFormattedNumber(num) + ".";
+		}
+		else {
+			document.getElementById("output-value").innerText = getFormattedNumber(num);
+		}
+		document.getElementById("hidden-output-value").innerText = num;
 	}
-	else if(num=="."){
-		document.getElementById("output-value").innerText = ".";
-	}
-	else if(num[num.length - 1]=="."){
-		document.getElementById("output-value").innerText = getFormattedNumber(num) + ".";
-	}
-	else {
-		document.getElementById("output-value").innerText = getFormattedNumber(num);
-	}
-	document.getElementById("hidden-output-value").innerText = num;
 }
 
 function getFormattedNumber(num) {
@@ -66,10 +70,9 @@ for (var i = 0; i < operator.length; i++) {
 				}
 			}
 			if (output != "" || history != "") {
-				//output = output == "" ? output : (output);
 				history = history + output;
 				if (this.id == "=") {
-					var result = eval(history);
+					var result = eval(history).toString();
 					printOutput(result);
 					printHistory("");
 				}
@@ -79,7 +82,7 @@ for (var i = 0; i < operator.length; i++) {
 					printOutput("");
 				}
 			}
-			else if(output == "" && history == "" && this.id=="-"){
+			else if (output == "" && history == "" && this.id=="-"){
 				printHistory(this.id)
 			}
 		}
@@ -89,7 +92,7 @@ for (var i = 0; i < operator.length; i++) {
 var number = document.getElementsByClassName("number");
 for (var i = 0; i < number.length; i++) {
 	number[i].addEventListener('click', function () {
-		var output = getOutput();
+			var output = getOutput();
 			output = output + this.id;
 			printOutput(output);
 	});
