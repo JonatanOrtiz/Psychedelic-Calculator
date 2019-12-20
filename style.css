@@ -23,6 +23,10 @@ body{
 #result{
   height: 120px;
 }
+#history-value{
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 #history{
   text-align: right;
   height: 20px;
@@ -30,6 +34,10 @@ body{
   padding-top: 20px;
   font-size: 15px;
   color: #797878;
+}
+#output-value{
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 #output{
   text-align: right;

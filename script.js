@@ -3,15 +3,13 @@ function getHistory() {
 }
 
 function printHistory(num) {
-	if (num.length<=30){
 		document.getElementById("history-value").innerText = num;
-	}
 }
 
 function getOutput() {
 	n = document.getElementById("hidden-output-value").innerText;
 	if (Number(n)>=1 && n.substr(0,1)=="0"){
-		return n.substr(1,14);
+		return n.substr(1,30);
 	}
 	else {
 		return n;
@@ -19,7 +17,6 @@ function getOutput() {
 }
 
 function printOutput(num) {
-	if (num.length<=14){
 		if (num == "") {
 			document.getElementById("output-value").innerText = "";
 		}
@@ -33,7 +30,6 @@ function printOutput(num) {
 			document.getElementById("output-value").innerText = getFormattedNumber(num);
 		}
 		document.getElementById("hidden-output-value").innerText = num;
-	}
 }
 
 function getFormattedNumber(num) {
@@ -59,7 +55,7 @@ for (var i = 0; i < operator.length; i++) {
 				else {
 					printOutput("")
 				}
-			}
+			}	
 		}
 		else {
 			var output = getOutput();
@@ -72,9 +68,9 @@ for (var i = 0; i < operator.length; i++) {
 			if (output != "" || history != "") {
 				history = history + output;
 				if (this.id == "=") {
-					var result = eval(history).toString();
-					printOutput(result);
-					printHistory("");
+						var result = eval(history).toString();
+						printOutput(result);
+						printHistory("");
 				}
 				else {
 					history = history + this.id;
@@ -83,7 +79,7 @@ for (var i = 0; i < operator.length; i++) {
 				}
 			}
 			else if (output == "" && history == "" && this.id=="-"){
-				printHistory(this.id)
+				printHistory(this.id);
 			}
 		}
 	});
