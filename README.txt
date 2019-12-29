@@ -1,1 +1,1 @@
-A Psychedelic Calculator in JavaScript
+A Psychedelic Calculator in JavaScript.
