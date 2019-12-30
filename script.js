@@ -37,7 +37,7 @@ for (var i = 0; i < operator.length; i++) {
 				output = output.substr(0, output.length - 1);
 				printOutput(output);
 				clicked_number = true;
-				if (output == "") {
+				if (output == ""|| output=="-") {
 					printOutput("0");
 					clicked_number = true;
 				}
