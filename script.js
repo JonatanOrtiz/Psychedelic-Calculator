@@ -11,7 +11,10 @@ function getOutput() {
 }
 
 function printOutput(num) {
-	if (num == "") {
+	if (num == "0") {
+		document.getElementById("output-value").innerText = "0";
+	}
+	else if (num == "") {
 		document.getElementById("output-value").innerText = "";
 	}
 	else if (num == ".") {
@@ -23,6 +26,10 @@ function printOutput(num) {
 }
 
 var clicked_number = false;
+var screen = "";
+var memory = "";
+var op1 = "";
+var op2 = "";
 
 var operator = document.getElementsByClassName("operator");
 for (var i = 0; i < operator.length; i++) {
@@ -44,29 +51,41 @@ for (var i = 0; i < operator.length; i++) {
 			}
 		}
 		else {
+			memory = Number(screen);
+			screen = Number(getOutput());
+			op2 = op1;
+			op1 = this.id;
 			var output = getOutput();
 			var history = getHistory();
-			if (clicked_number==false&&this.id!= "=") {
+			if (clicked_number==false&&this.id!="="&&getHistory()!="") {
 				history = history.substr(0, history.length - 1);
-				printHistory(getOutput()+history+this.id);
-				printOutput("");
-			}
-			else if (this.id == "=") {
-				history = history + output;
-				var result = eval(history).toString();
-				if(isNaN(result)){
-					printOutput("Indefinido");
-				}
-				else{
-				printOutput(result);
-				printHistory("");
-				}
+				printHistory(history+this.id);
 			}
 			else {
 				history = history + output + this.id;
 				printHistory(history);
-				printOutput("");
+				switch(op2) {
+					case "+":
+						printOutput(memory + screen);
+						break;
+					case "-":
+						printOutput(memory - screen);
+						break;
+						case "*":
+						printOutput(memory * screen);
+						break;
+					case "/":
+						printOutput(memory / screen);
+						break;
+						case "%":
+						printOutput(memory/100*screen);
+						break;
+				}
 				clicked_number=false;
+				screen = Number(getOutput());
+				if(this.id=="="){
+					printHistory("");
+				}
 			}
 		}
 	});
@@ -76,13 +95,16 @@ var number = document.getElementsByClassName("number");
 for (var i = 0; i < number.length; i++) {
 	number[i].addEventListener('click', function () {
 		if (getOutput()=="0"){
-			printOutput("")
+			printOutput("");
+		}
+		if(clicked_number==false){
+			printOutput("");
 		}
 		clicked_number = true;
 		var output = getOutput();
 		output = Number(output + this.id);
 		if(output==""){
-			printOutput("0")
+			printOutput("0");
 		}
 		else{
 			printOutput(output);
@@ -91,6 +113,10 @@ for (var i = 0; i < number.length; i++) {
 }
 
 document.getElementById(".").addEventListener('click', function () {
+	if(clicked_number==false){
+		printOutput("0.")
+		clicked_number = true;
+	}
 	if(getOutput()==""){
 		printOutput("0.");
 		clicked_number = true;
