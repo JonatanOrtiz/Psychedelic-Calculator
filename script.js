@@ -31,12 +31,20 @@ var memory = "";
 var op1 = "";
 var op2 = "";
 
+function clear (){
+	screen = "";
+	memory = "";
+	op1 = "";
+	op2 = "";
+	printHistory("");
+	printOutput("0");
+}
+
 var operator = document.getElementsByClassName("operator");
 for (var i = 0; i < operator.length; i++) {
 	operator[i].addEventListener('click', function () {
 		if (this.id == "clear") {
-			printHistory("");
-			printOutput("0");
+			clear();
 		}
 		else if (this.id == "backspace") {
 			var output = getOutput().toString();
@@ -50,43 +58,85 @@ for (var i = 0; i < operator.length; i++) {
 				}
 			}
 		}
+		else if (this.id == "clear-entry") {
+			printOutput("0");
+		}
 		else {
 			memory = Number(screen);
 			screen = Number(getOutput());
 			op2 = op1;
 			op1 = this.id;
-			var output = getOutput();
 			var history = getHistory();
-			if (clicked_number==false&&this.id!="="&&getHistory()!="") {
+			if (clicked_number==false&&op1!="="&&op1!="±"&&op1!="√"&&op1!="R"&&getHistory()!=""&&op2!="√"&&op2!="R") {
 				history = history.substr(0, history.length - 1);
-				printHistory(history+this.id);
+				printHistory(history+op1);
 			}
 			else {
-				history = history + output + this.id;
-				printHistory(history);
-				switch(op2) {
-					case "+":
-						printOutput(memory + screen);
-						break;
-					case "-":
-						printOutput(memory - screen);
-						break;
+					if(op1=="√"||op1=="R"){
+						history = history + op1 + "(" + screen + ")";
+						printHistory(history);
+					}
+					else{
+						if(op2=="√"||op2=="R"){
+							history = history + op1;
+							printHistory(history);
+						}
+						else{
+						history = history + screen + op1;
+						printHistory(history);
+						}
+					}
+					switch(op1) {
+						case "√":
+							result = Math.sqrt(screen);
+							if(isNaN(result)){
+								alert("Negative numbers can't have square roots!");
+								clear();
+							}
+							else{
+							printOutput(result);
+							screen = result;
+							}
+							break;
+						case "R":
+							result = 1/screen;
+							printOutput(result);
+							screen = result;
+							break;
+					}
+					switch(op2) {
+						case "+":
+							printOutput(memory + screen);
+							break;
+						case "-":
+							printOutput(memory - screen);
+							break;
 						case "*":
-						printOutput(memory * screen);
-						break;
-					case "/":
-						printOutput(memory / screen);
-						break;
+							printOutput(memory * screen);
+							break;
+						case "/":
+							result = memory / screen;
+							if(isNaN(result)||result==Infinity){
+								alert("The result of a division by zero is undefined!");
+								clear();
+							}
+							else{
+							printOutput(result);
+							}
+							break;
 						case "%":
-						printOutput(memory/100*screen);
-						break;
-				}
-				clicked_number=false;
-				screen = Number(getOutput());
-				if(this.id=="="){
-					printHistory("");
+							printOutput(memory/100*screen);
+							break;
+						case "^":
+							printOutput(Math.pow(memory,screen));
+							break;
+					}
+					if(op1=="="){
+						printHistory("");
 				}
 			}
+			clicked_number=false;
+			screen = Number(getOutput());
 		}
 	});
 }
@@ -94,6 +144,9 @@ for (var i = 0; i < operator.length; i++) {
 var number = document.getElementsByClassName("number");
 for (var i = 0; i < number.length; i++) {
 	number[i].addEventListener('click', function () {
+		if(op1=="√"||op1=="R"){
+			clear();
+		}
 		if (getOutput()=="0"){
 			printOutput("");
 		}
@@ -112,6 +165,20 @@ for (var i = 0; i < number.length; i++) {
 	});
 }
 
+document.getElementById("±").addEventListener('click', function () {
+	var output = getOutput();
+	if(output=="0"||output==""){}
+	else if(output.startsWith("-")){
+		output = output.substr(1,output.length);
+		printOutput(output);
+	}
+	else {
+	 output = "-" + output;
+	 printOutput(output);
+	}
+	clicked_number = true;
+});
+
 document.getElementById(".").addEventListener('click', function () {
 	if(clicked_number==false){
 		printOutput("0.")
@@ -128,3 +195,20 @@ document.getElementById(".").addEventListener('click', function () {
 	 printOutput(output);
 	}
 });
+
+document.querySelector('input[name=theme]').addEventListener('change', function() {
+	if(this.checked) {
+		trans()
+		document.getElementById("style").setAttribute('href', 'style2.css')
+	} else {
+		trans()
+		document.getElementById("style").setAttribute('href', 'style.css')
+	}
+})
+
+let trans = () => {
+	document.documentElement.classList.add('transition');
+	window.setTimeout(() => {
+		document.documentElement.classList.remove('transition')
+	}, 1000)
+}
