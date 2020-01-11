@@ -7,7 +7,7 @@ function printHistory(num) {
 }
 
 function getOutput() {
-		return document.getElementById("output-value").innerText;
+	return document.getElementById("hidden-output-value").innerText;
 }
 
 function printOutput(num) {
@@ -18,11 +18,18 @@ function printOutput(num) {
 		document.getElementById("output-value").innerText = "";
 	}
 	else if (num == ".") {
-		document.getElementById("output-value").innerText = ".";
+		document.getElementById("output-value").innerText = getFormattedNumber(num) + ".";
 	}
-	else{
-		document.getElementById("output-value").innerText = num;
-	}	
+	else {
+		document.getElementById("output-value").innerText = getFormattedNumber(num);
+	}
+	document.getElementById("hidden-output-value").innerText = num;
+}
+
+function getFormattedNumber(num) {
+	var n = Number(num);
+	var value = n.toLocaleString("en");
+	return value;
 }
 
 var clicked_number = false;
@@ -31,7 +38,7 @@ var memory = "";
 var op1 = "";
 var op2 = "";
 
-function clear (){
+function clear() {
 	screen = "";
 	memory = "";
 	op1 = "";
@@ -48,11 +55,11 @@ for (var i = 0; i < operator.length; i++) {
 		}
 		else if (this.id == "backspace") {
 			var output = getOutput().toString();
-			if (output!="0") {
+			if (output != "0") {
 				output = output.substr(0, output.length - 1);
 				printOutput(output);
 				clicked_number = true;
-				if (output == ""|| output=="-") {
+				if (output == "" || output == "-") {
 					printOutput("0");
 					clicked_number = true;
 				}
@@ -67,75 +74,75 @@ for (var i = 0; i < operator.length; i++) {
 			op2 = op1;
 			op1 = this.id;
 			var history = getHistory();
-			if (clicked_number==false&&op1!="="&&op1!="±"&&op1!="√"&&op1!="R"&&getHistory()!=""&&op2!="√"&&op2!="R") {
+			if (clicked_number == false && op1 != "=" && op1 != "±" && op1 != "√" && op1 != "R" && getHistory() != "" && op2 != "√" && op2 != "R") {
 				history = history.substr(0, history.length - 1);
-				printHistory(history+op1);
+				printHistory(history + op1);
 			}
 			else {
-					if(op1=="√"||op1=="R"){
-						history = history + op1 + "(" + screen + ")";
+				if (op1 == "√" || op1 == "R") {
+					history = history + op1 + "(" + screen + ")";
+					printHistory(history);
+				}
+				else {
+					if (op2 == "√" || op2 == "R") {
+						history = history + op1;
 						printHistory(history);
 					}
-					else{
-						if(op2=="√"||op2=="R"){
-							history = history + op1;
-							printHistory(history);
-						}
-						else{
+					else {
 						history = history + screen + op1;
 						printHistory(history);
+					}
+				}
+				switch (op1) {
+					case "√":
+						result = Math.sqrt(screen);
+						if (isNaN(result)) {
+							alert("Negative numbers can't have square roots!");
+							clear();
 						}
-					}
-					switch(op1) {
-						case "√":
-							result = Math.sqrt(screen);
-							if(isNaN(result)){
-								alert("Negative numbers can't have square roots!");
-								clear();
-							}
-							else{
+						else {
 							printOutput(result);
 							screen = result;
-							}
-							break;
-						case "R":
-							result = 1/screen;
+						}
+						break;
+					case "R":
+						result = 1 / screen;
+						printOutput(result);
+						screen = result;
+						break;
+				}
+				switch (op2) {
+					case "+":
+						printOutput(memory + screen);
+						break;
+					case "-":
+						printOutput(memory - screen);
+						break;
+					case "*":
+						printOutput(memory * screen);
+						break;
+					case "/":
+						result = memory / screen;
+						if (isNaN(result) || result == Infinity) {
+							alert("The result of a division by zero is undefined!");
+							clear();
+						}
+						else {
 							printOutput(result);
-							screen = result;
-							break;
-					}
-					switch(op2) {
-						case "+":
-							printOutput(memory + screen);
-							break;
-						case "-":
-							printOutput(memory - screen);
-							break;
-						case "*":
-							printOutput(memory * screen);
-							break;
-						case "/":
-							result = memory / screen;
-							if(isNaN(result)||result==Infinity){
-								alert("The result of a division by zero is undefined!");
-								clear();
-							}
-							else{
-							printOutput(result);
-							}
-							break;
-						case "%":
-							printOutput(memory/100*screen);
-							break;
-						case "^":
-							printOutput(Math.pow(memory,screen));
-							break;
-					}
-					if(op1=="="){
-						printHistory("");
+						}
+						break;
+					case "%":
+						printOutput(memory / 100 * screen);
+						break;
+					case "^":
+						printOutput(Math.pow(memory, screen));
+						break;
+				}
+				if (op1 == "=") {
+					printHistory("");
 				}
 			}
-			clicked_number=false;
+			clicked_number = false;
 			screen = Number(getOutput());
 		}
 	});
@@ -144,22 +151,22 @@ for (var i = 0; i < operator.length; i++) {
 var number = document.getElementsByClassName("number");
 for (var i = 0; i < number.length; i++) {
 	number[i].addEventListener('click', function () {
-		if(op1=="√"||op1=="R"){
+		if (op1 == "√" || op1 == "R") {
 			clear();
 		}
-		if (getOutput()=="0"){
+		if (getOutput() == "0") {
 			printOutput("");
 		}
-		if(clicked_number==false){
+		if (clicked_number == false) {
 			printOutput("");
 		}
 		clicked_number = true;
 		var output = getOutput();
 		output = Number(output + this.id);
-		if(output==""){
+		if (output == "") {
 			printOutput("0");
 		}
-		else{
+		else {
 			printOutput(output);
 		}
 	});
@@ -167,37 +174,37 @@ for (var i = 0; i < number.length; i++) {
 
 document.getElementById("±").addEventListener('click', function () {
 	var output = getOutput();
-	if(output=="0"||output==""){}
-	else if(output.startsWith("-")){
-		output = output.substr(1,output.length);
+	if (output == "0" || output == "") { }
+	else if (output.startsWith("-")) {
+		output = output.substr(1, output.length);
 		printOutput(output);
 	}
 	else {
-	 output = "-" + output;
-	 printOutput(output);
+		output = "-" + output;
+		printOutput(output);
 	}
 	clicked_number = true;
 });
 
 document.getElementById(".").addEventListener('click', function () {
-	if(clicked_number==false){
+	if (clicked_number == false) {
 		printOutput("0.")
 		clicked_number = true;
 	}
-	if(getOutput()==""){
+	if (getOutput() == "") {
 		printOutput("0.");
 		clicked_number = true;
 	}
-	else if(getOutput().includes(".")){}
+	else if (getOutput().includes(".")) { }
 	else {
-	 var output = getOutput();
-	 output = output + this.id;
-	 printOutput(output);
+		var output = getOutput();
+		output = output + this.id;
+		printOutput(output);
 	}
 });
 
-document.querySelector('input[name=theme]').addEventListener('change', function() {
-	if(this.checked) {
+document.querySelector('input[name=theme]').addEventListener('change', function () {
+	if (this.checked) {
 		trans()
 		document.getElementById("style").setAttribute('href', 'style2.css')
 	} else {
