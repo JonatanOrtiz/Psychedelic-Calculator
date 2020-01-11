@@ -74,7 +74,8 @@ for (var i = 0; i < operator.length; i++) {
 			op2 = op1;
 			op1 = this.id;
 			var history = getHistory();
-			if (clicked_number == false && op1 != "=" && op1 != "±" && op1 != "√" && op1 != "R" && getHistory() != "" && op2 != "√" && op2 != "R") {
+			if (clicked_number == false && op1 != "=" && op1 != "±" && op1 != "√" && op1 != "R"
+			&& getHistory() != "" && op2 != "√" && op2 != "R") {
 				history = history.substr(0, history.length - 1);
 				printHistory(history + op1);
 			}
